@@ -36,7 +36,7 @@ function App() {
 
   return (
     <>
-      {data ? (<Main/>) : (
+      {data ? (<Main data={data} />) : (
         <div className="loadingState">
           <i className="fa-solid fa-gear"></i>
         </div>
