@@ -5,12 +5,15 @@ import SideBar from "./components/SideBar"
 
 function App() {
 
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
   function handleToggleModal() {
     setShowModal(!showModal);
   }
 
+  // hook for on page load
   useEffect(()=> {
     async function fetchAPIData() {
       const NASA_KEY = import.meta.env.VITE_NASA_API_KEY;
@@ -18,9 +21,11 @@ function App() {
 
       try {
         const res = await fetch(url);
-        const data = await res.json();
+        const apiData = await res.json();
 
-        console.log("DATA\n", data);
+        setData(apiData);
+
+        console.log("DATA\n", apiData);
       } catch (error) {
         console.log(error.message);
       }
@@ -31,11 +36,17 @@ function App() {
 
   return (
     <>
-      <Main/>
-      {showModal && (
-        <SideBar handleToggleModal={handleToggleModal} />
+      {data ? (<Main/>) : (
+        <div className="loadingState">
+          <i className="fa-solid fa-gear"></i>
+        </div>
       )}
-      <Footer handleToggleModal={handleToggleModal} />
+      {showModal && (
+        <SideBar data={data} handleToggleModal={handleToggleModal} />
+      )}
+      {data && (
+        <Footer data={data} handleToggleModal={handleToggleModal} />
+      )}
     </>
   )
 }
